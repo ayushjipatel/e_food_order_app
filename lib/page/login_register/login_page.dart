@@ -17,8 +17,8 @@ class LoginPageView extends StatefulWidget {
 
 class _LoginPageViewState extends State<LoginPageView> {
   bool isLogin = true;
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
 
   //initialize firebase app
   Future<FirebaseApp> _initializeFirebase() async {
@@ -44,21 +44,36 @@ class _LoginPageViewState extends State<LoginPageView> {
   }
 
   @override
+  void initState() {
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: FutureBuilder(
           future: _initializeFirebase(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               print("Connection is established");
+              // print(Dimensions.screenHeight);
               return SingleChildScrollView(
                 child: Container(
-                  color: Colors.white,
+                  //color: Colors.red,
                   child: Column(
                     children: [
                       Container(
-                        margin:
-                            EdgeInsets.only(top: Dimensions.height20 * 2 - 1),
+                        margin: EdgeInsets.only(top: Dimensions.height20 * 2),
                         width: double.maxFinite,
                         height: Dimensions.height20 * 11,
                         decoration: const BoxDecoration(
@@ -215,7 +230,7 @@ class _LoginPageViewState extends State<LoginPageView> {
                             ),
                             Center(
                                 child: Container(
-                              height: 80,
+                              height: Dimensions.height20 * 4,
                               decoration: BoxDecoration(
                                   color: AppColors.mainColor,
                                   borderRadius: BorderRadius.circular(
@@ -228,7 +243,7 @@ class _LoginPageViewState extends State<LoginPageView> {
                                     left: Dimensions.width30 * 2),
                                 child: GestureDetector(
                                   onTap: () async {
-                                    print("i Am touched");
+                                    //  print("i Am touched");
                                     try {
                                       await Auth().signInWithEmailAndPassword(
                                         email: _emailController.text,
@@ -298,7 +313,7 @@ class _LoginPageViewState extends State<LoginPageView> {
                             ],
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

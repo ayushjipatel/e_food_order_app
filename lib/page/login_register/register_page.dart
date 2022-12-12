@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_milkapp/route/route_handler.dart';
 import 'package:e_milkapp/services/auth.dart';
+import 'package:e_milkapp/services/register_user.dart';
 import 'package:e_milkapp/utilities/colors.dart';
 import 'package:e_milkapp/utilities/dimensions.dart';
 import 'package:e_milkapp/widgets/big_text.dart';
@@ -18,8 +20,11 @@ class RegisterPageView extends StatefulWidget {
 }
 
 class _RegisterPageViewState extends State<RegisterPageView> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
+
   //initialize firebase app
 
 //create user
@@ -31,8 +36,27 @@ class _RegisterPageViewState extends State<RegisterPageView> {
   }
 
   @override
+  void initState() {
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _phoneController = TextEditingController();
+    _nameController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _phoneController.dispose();
+    _nameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
           // color: Colors.red,
@@ -52,171 +76,120 @@ class _RegisterPageViewState extends State<RegisterPageView> {
               SizedBox(
                 height: Dimensions.height10 * 2,
               ),
+//email
               Padding(
                 padding: EdgeInsets.only(
                     left: Dimensions.width15, right: Dimensions.width15),
-                child: Container(
-                  // ignore: sort_child_properties_last
-                  child: TextField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.email, color: Color(0xFF89dad0)),
-                      border: OutlineInputBorder(),
-                      hintText: 'Email',
+                child: TextField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(Dimensions.radius30 / 2),
+                      borderSide: BorderSide(color: Colors.grey.shade500),
                     ),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.radius20),
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0xFFe8e8e8),
-                        blurRadius: 5.0,
-                        offset: Offset(0, 5),
-                      ),
-                      BoxShadow(
-                        color: Color(0xFFe8e8e8),
-                        blurRadius: 5.0,
-                        offset: Offset(5, 0),
-                      ),
-                      BoxShadow(
-                        color: Colors.white,
-                        offset: Offset(-5, 0),
-                      ),
-                      BoxShadow(
-                        color: Colors.white,
-                        offset: Offset(5, 0),
-                      )
-                    ],
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                          Dimensions.radius30 / 2 + Dimensions.radius20 / 4),
+                      borderSide: const BorderSide(color: Colors.black),
+                    ),
+                    hintText: 'Email',
+                    fillColor: Colors.grey.shade50,
+                    filled: true,
+                    prefixIcon: Icon(
+                      Icons.email,
+                      color: AppColors.mainColor,
+                    ),
                   ),
                 ),
               ),
               SizedBox(
                 height: Dimensions.height15,
               ),
+//password
               Padding(
                 padding: EdgeInsets.only(
                     left: Dimensions.width15, right: Dimensions.width15),
-                child: Container(
-                  // ignore: sort_child_properties_last
-                  child: TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      prefixIcon:
-                          Icon(Icons.password, color: Color(0xFF89dad0)),
-                      border: OutlineInputBorder(),
-                      hintText: 'Password',
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(Dimensions.radius30 / 2),
+                      borderSide: BorderSide(color: Colors.grey.shade500),
                     ),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.radius20),
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0xFFe8e8e8),
-                        blurRadius: 5.0,
-                        offset: Offset(0, 5),
-                      ),
-                      BoxShadow(
-                        color: Color(0xFFe8e8e8),
-                        blurRadius: 5.0,
-                        offset: Offset(5, 0),
-                      ),
-                      BoxShadow(
-                        color: Colors.white,
-                        offset: Offset(-5, 0),
-                      ),
-                      BoxShadow(
-                        color: Colors.white,
-                        offset: Offset(5, 0),
-                      )
-                    ],
+                    fillColor: Colors.grey.shade50,
+                    filled: true,
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                          Dimensions.radius30 / 2 + Dimensions.radius20 / 4),
+                      borderSide: const BorderSide(color: Colors.black),
+                    ),
+                    hintText: 'Password',
+                    prefixIcon: Icon(
+                      Icons.password,
+                      color: AppColors.mainColor,
+                    ),
                   ),
                 ),
               ),
               SizedBox(
                 height: Dimensions.height15,
               ),
+//Phone
               Padding(
                 padding: EdgeInsets.only(
                     left: Dimensions.width15, right: Dimensions.width15),
-                child: Container(
-                  // ignore: sort_child_properties_last
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      prefixIcon:
-                          Icon(Icons.smartphone, color: Color(0xFF89dad0)),
-                      border: OutlineInputBorder(),
-                      hintText: 'Phone',
+                child: TextField(
+                  keyboardType: TextInputType.phone,
+                  controller: _phoneController,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(Dimensions.radius30 / 2),
+                      borderSide: BorderSide(color: Colors.grey.shade500),
                     ),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.radius20),
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0xFFe8e8e8),
-                        blurRadius: 5.0,
-                        offset: Offset(0, 5),
-                      ),
-                      BoxShadow(
-                        color: Color(0xFFe8e8e8),
-                        blurRadius: 5.0,
-                        offset: Offset(5, 0),
-                      ),
-                      BoxShadow(
-                        color: Colors.white,
-                        offset: Offset(-5, 0),
-                      ),
-                      BoxShadow(
-                        color: Colors.white,
-                        offset: Offset(5, 0),
-                      )
-                    ],
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                            Dimensions.radius30 / 2 + Dimensions.radius20 / 4),
+                        borderSide: const BorderSide(color: Colors.black)),
+                    prefixIcon:
+                        const Icon(Icons.smartphone, color: Color(0xFF89dad0)),
+                    hintText: 'Phone',
+                    fillColor: Colors.grey.shade50,
+                    filled: true,
                   ),
                 ),
               ),
               SizedBox(
                 height: Dimensions.height15,
               ),
+//Name
               Padding(
                 padding: EdgeInsets.only(
                     left: Dimensions.width15, right: Dimensions.width15),
-                child: Container(
-                  // ignore: sort_child_properties_last
-                  child: const TextField(
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.person, color: Color(0xFF89dad0)),
-                      border: OutlineInputBorder(),
+                child: TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius30 / 2),
+                        borderSide: BorderSide(color: Colors.grey.shade500),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                            Dimensions.radius30 / 2 + Dimensions.radius20 / 4),
+                        borderSide: const BorderSide(color: Colors.black),
+                      ),
                       hintText: 'Name',
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.radius20),
-                    color: Colors.white,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0xFFe8e8e8),
-                        blurRadius: 5.0,
-                        offset: Offset(0, 5),
-                      ),
-                      BoxShadow(
-                        color: Color(0xFFe8e8e8),
-                        blurRadius: 5.0,
-                        offset: Offset(5, 0),
-                      ),
-                      BoxShadow(
-                        color: Colors.white,
-                        offset: Offset(-5, 0),
-                      ),
-                      BoxShadow(
-                        color: Colors.white,
-                        offset: Offset(5, 0),
-                      )
-                    ],
-                  ),
+                      fillColor: Colors.grey.shade50,
+                      filled: true,
+                      prefixIcon: Icon(
+                        Icons.person,
+                        color: AppColors.mainColor,
+                      )),
                 ),
               ),
               SizedBox(
@@ -225,6 +198,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
               SizedBox(
                 height: Dimensions.height10 * 2,
               ),
+//sign up button
               Container(
                   color: Colors.white,
                   child: Container(
@@ -252,6 +226,16 @@ class _RegisterPageViewState extends State<RegisterPageView> {
                             Get.toNamed(RouteHelper.getLoginPage());
                           }
                         }
+                        try {
+                          await RegisterUser().registerUserDetail(
+                            email: _emailController.text.trim(),
+                            name: _nameController.text.trim(),
+                            phone: int.parse(_phoneController.text),
+                          );
+                          print("hello i am called for users details");
+                        } on FirebaseException catch (e) {
+                          print(e.code);
+                        }
                       },
                       child: Padding(
                         padding: EdgeInsets.only(
@@ -271,6 +255,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
               SizedBox(
                 height: Dimensions.height10,
               ),
+//bottom naivgation
               Center(
                 child: Column(
                   children: [

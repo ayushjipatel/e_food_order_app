@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -30,5 +31,16 @@ class Auth {
 
   Future<void> passwordResetWithEmail({required String email}) async {
     await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+  Future<void> addUserDetails({
+    //required String email ,
+    required String name,
+    required String phone,
+  }) async {
+    await FirebaseFirestore.instance.collection('Users').add({
+      'name': name,
+      'phone': phone,
+    });
   }
 }

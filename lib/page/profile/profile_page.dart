@@ -1,5 +1,6 @@
 import 'package:e_milkapp/route/route_handler.dart';
 import 'package:e_milkapp/services/auth.dart';
+import 'package:e_milkapp/services/register_user.dart';
 import 'package:e_milkapp/utilities/app_constants.dart';
 import 'package:e_milkapp/utilities/colors.dart';
 import 'package:e_milkapp/utilities/dimensions.dart';
@@ -327,21 +328,27 @@ class _ProfilePageState extends State<ProfilePage> {
                     )
                   ],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.edit,
-                        color: AppColors.mainColor,
-                      ),
-                      SizedBox(
-                        width: Dimensions.width15,
-                      ),
-                      BigText(
-                        text: 'Edit Profile',
-                      ),
-                    ],
+                child: GestureDetector(
+                  onTap: () async {
+                    print("i am touched");
+                    await RegisterUser().getCurrentuserDetails();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.edit,
+                          color: AppColors.mainColor,
+                        ),
+                        SizedBox(
+                          width: Dimensions.width15,
+                        ),
+                        BigText(
+                          text: 'Edit Profile',
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

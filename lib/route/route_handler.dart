@@ -1,5 +1,4 @@
 import 'package:e_milkapp/home/home_page.dart';
-import 'package:e_milkapp/home/main_food_page.dart';
 import 'package:e_milkapp/page/cart/cart_page.dart';
 import 'package:e_milkapp/page/food/popular_food_details.dart';
 import 'package:e_milkapp/page/food/recommended_food_detail.dart';
